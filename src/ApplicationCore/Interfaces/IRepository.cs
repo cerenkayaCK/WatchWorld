@@ -10,11 +10,11 @@ namespace ApplicationCore.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {
-        Task<T?> GetByIdAsync(int id);
         Task<List<T>> GetAllAsync(ISpecification<T> specification);
+        Task<T?> GetByIdAsync(int id);
         Task<T> AddAsync(T entity);
-        Task<T> UpdateAsync(T entity);
-        Task<T> DeleteAsync(T entity);
+        Task UpdateAsync(T entity);
+        Task DeleteAsync(T entity);
         Task<int> CountAsync(ISpecification<T> specification);
         Task<int> FirstAsync(ISpecification<T> specification);
         Task<int> FirstOrDefaultAsync(ISpecification<T> specification);

@@ -1,3 +1,4 @@
+using ApplicationCore.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -7,21 +8,27 @@ namespace Web
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
             builder.Services.AddDbContext<WatchWorldContext>(options =>
                 options.UseNpgsql(builder.Configuration.GetConnectionString("WatchWorldContext")));
-            builder.Services.AddDbContext<AppIdentityDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppIdentityDbContext")));
+            builder.Services.AddDbContext<AppIdentityDbContext>(options => 
+                options.UseNpgsql(builder.Configuration.GetConnectionString("AppIdentityDbContext")));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddScoped(typeof(IRepository<>),typeof(EfRepository<>));
+
+            builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
+                options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -47,6 +54,17 @@ namespace Web
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            using(var scope = app.Services.CreateScope())
+            {
+                var watchWorldContext = scope.ServiceProvider.GetRequiredService<WatchWorldContext>();
+                var identityContext = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var usermanager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+                await AppIdentityDbContextSeed.SeedAsync(identityContext,roleManager, usermanager);
+                await WatchWorldContextSeed.SeedAsync(watchWorldContext);
+            }
 
             app.Run();
         }

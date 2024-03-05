@@ -3,6 +3,8 @@ using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Web.Interfaces;
+using Web.Service;
 
 namespace Web
 {
@@ -21,6 +23,7 @@ namespace Web
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddScoped(typeof(IRepository<>),typeof(EfRepository<>));
+            builder.Services.AddScoped<IHomeViewModelService, HomeViewModelService>();
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
                 options.SignIn.RequireConfirmedAccount = false)
@@ -45,6 +48,8 @@ namespace Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseRequestLocalization("en-US");
 
             app.UseRouting();
 

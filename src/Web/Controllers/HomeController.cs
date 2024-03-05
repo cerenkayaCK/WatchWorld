@@ -1,4 +1,6 @@
+using ApplicationCore.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Web.Interfaces;
 using Web.Models;
@@ -10,15 +12,23 @@ namespace Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IHomeViewModelService _homeViewModelService;
 
-        public HomeController(ILogger<HomeController> logger, IHomeViewModelService homeViewModelService)
+        public HomeController(ILogger<HomeController> logger, IHomeViewModelService homeViewModelService,IRepository repository)
         {
             _logger = logger;
             _homeViewModelService = homeViewModelService;
+
         }
 
-        public async Task<IActionResult> Index(int? categoryId,int? brandId, int pageId = 1)
+        public async Task<IActionResult> Index(int? categoryId, int? brandId, int pageId = 1)
         {
-            var vm = await _homeViewModelService.GetHomeViewModelAsync(categoryId, brandId,pageId);
+            var vm = await _homeViewModelService.GetHomeViewModelAsync(categoryId, brandId, pageId);
+
+            var paginationInfo = new PaginationInfoViewModel
+            {
+                PageId = pageId,
+                TotalItems = ?,
+                ItemsOnPage = 4
+            };
             return View(vm);
         }
 

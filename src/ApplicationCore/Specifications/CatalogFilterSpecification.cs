@@ -22,7 +22,7 @@ namespace ApplicationCore.Specifications
             }
         }
 
-        public CatalogFilterSpecification(int? categoryId,int? brandId,int skip,int take) : this(categoryId, brandId)
+        public CatalogFilterSpecification(int? categoryId,int? brandId, int skip, int take) : this(categoryId, brandId)
         {
             Query.Skip(skip).Take(take);
         }

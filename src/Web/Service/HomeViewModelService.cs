@@ -22,7 +22,11 @@ namespace Web.Service
         public async Task<HomeViewModel> GetHomeViewModelAsync(int? categoryId, int? brandId, int pageId)
         {
             var specProducts = new CatalogFilterSpecification(categoryId, brandId);
-            var products = await _productRepo.GetAllAsync(specProducts);
+            var totalItems = await _productRepo.CountAsync(specProducts);
+            var specProductsPaginated = new CatalogFilterSpecification(categoryId, brandId, (pageId - 1) * Constants.ITEMS_PER_PAGE, Constants.ITEMS_PER_PAGE);
+
+            var products = await _productRepo.GetAllAsync(specProductsPaginated);
+
             var vm = new HomeViewModel()
             {
                 BrandId = brandId,
@@ -36,9 +40,16 @@ namespace Web.Service
 
                 }).ToList(),
                 Brands = (await _brandRepo.GetAllAsync()).Select(b => new SelectListItem(b.Name, b.Id.ToString())).ToList(),
-                Categories = (await _categoryRepo.GetAllAsync()).Select(b => new SelectListItem(b.Name, b.Id.ToString())).ToList()
+                Categories = (await _categoryRepo.GetAllAsync()).Select(b => new SelectListItem(b.Name, b.Id.ToString())).ToList(),
+                PaginationInfo = new PaginationInfoViewModel()
+                {
+                    TotalItems=totalItems,
+                    ItemsOnPage=products.Count,
+                    PageId = pageId
+                }
 
             };
+           
             return vm;
         }
      

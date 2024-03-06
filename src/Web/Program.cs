@@ -49,7 +49,7 @@ namespace Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRequestLocalization("en-US");
+            //app.UseRequestLocalization("en-US");
 
             app.UseRouting();
 

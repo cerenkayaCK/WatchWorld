@@ -32,3 +32,5 @@ Update-Database -Context WatchWorldContext
 Add-Migration InitialCreate -Context AppIdentityDbContext -OutputDir Identity/Migrations
 Update-Database -Context WatchWorldContext
 ```
+
+Add-Migration BasketAdded -Context WatchWorldContext -OutputDir Data/Migrations

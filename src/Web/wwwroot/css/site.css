@@ -41,9 +41,7 @@ body {
 
 
 /* FOR DEMO */
-body {
-    margin: 2rem;
-}
+
 .product-image > img {
     transform: scale(.8);
     transition: all .35s;
@@ -64,5 +62,5 @@ body {
 
 /* FOR DEMO */
 body {
-    margin: 2rem;
+    margin: 1rem;
 }

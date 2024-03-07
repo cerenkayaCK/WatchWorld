@@ -1,4 +1,5 @@
 using ApplicationCore.Interfaces;
+using ApplicationCore.Services;
 using Infrastructure.Data;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +23,10 @@ namespace Web
                 options.UseNpgsql(builder.Configuration.GetConnectionString("AppIdentityDbContext")));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            //http context accessor hizmetini saðlar.
+            builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped(typeof(IRepository<>),typeof(EfRepository<>));
+            builder.Services.AddScoped<IBasketService, BasketService>();
             builder.Services.AddScoped<IHomeViewModelService, HomeViewModelService>();
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => 

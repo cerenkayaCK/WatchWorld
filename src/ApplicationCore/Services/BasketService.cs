@@ -20,6 +20,7 @@ namespace ApplicationCore.Services
         {
             _basketItemRepo= basketItemRepo;
             _basketRepo = basketRepo; 
+            _productRepo= productRepo;
         }
         public async Task<Basket> AddItemToBasketAsync(string buyerId, int productId, int quantity)
         {

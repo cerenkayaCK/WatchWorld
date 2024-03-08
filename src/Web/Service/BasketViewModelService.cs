@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using Web.Interfaces;
 using Web.Models;
-
 using System.Security.Claims;
 using System.Runtime.InteropServices;
 using Web.Extensions;
@@ -44,6 +43,12 @@ namespace Web.Service
         {
             var basket = await _basketService.AddItemToBasketAsync(BuyerId, productId, quantity);
 
+            return basket.ToBasketViewModel();
+        }
+
+        public async Task<BasketViewModel> GetBasketViewModelAsync()
+        {
+            var basket = await _basketService.GetOrCreateBasketAsync(BuyerId);
             return basket.ToBasketViewModel();
         }
     }

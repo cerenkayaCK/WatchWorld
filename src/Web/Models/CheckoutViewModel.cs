@@ -18,7 +18,7 @@ namespace Web.Models
 
 
         [MaxLength(60)]
-        public string State { get; set; }
+        public string? State { get; set; }
 
 
         [Required, MaxLength(90)]
